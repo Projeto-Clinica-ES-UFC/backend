@@ -1,18 +1,17 @@
-import { Hono } from "hono";
-import { cors } from "hono/cors";
-import { csrf } from "hono/csrf";
-import { logger } from "hono/logger";
-import { getConnInfo } from "hono/vercel";
+import {Hono} from "hono";
+import {cors} from "hono/cors";
+import {csrf} from "hono/csrf";
+import {logger} from "hono/logger";
+import {getConnInfo} from "hono/vercel";
 
-import { rateLimiter } from "hono-rate-limiter";
-import { prettyJSON } from "hono/pretty-json";
-import { requestId } from "hono/request-id";
+import {rateLimiter} from "hono-rate-limiter";
+import {prettyJSON} from "hono/pretty-json";
+import {i18n} from "@/http/middlewares/i18n";
 
-import { httpRoutes } from "@/http/routes";
-import { type Variables } from "@/types";
-import { generateId } from "@/utils/generate-id";
+import {httpRoutes} from "@/http/routes";
+import {type Variables} from "@/types";
 
-import { env } from "./env";
+import {env} from "./env";
 
 const app = new Hono<{ Variables: Variables }>({
   strict: false,
@@ -52,27 +51,9 @@ app.use(
       const info = getConnInfo(c);
       return info.remote.address as string;
     },
-    message: { message: "Too many requests, please try again later." },
+    message: {message: "Too many requests, please try again later."},
   })
 );
-
-/**
- * Request ID Middleware generates a unique ID for each request, which you can use in your handlers.
- *
- * Read more about the Request ID Middleware here:
- * https://hono.dev/docs/middleware/builtin/request-id
- */
-app.use(
-  "*",
-  requestId({
-    /**
-     * The header name used for the request ID. The default is X-Request-Id.
-     * */
-    headerName: "X-Request-Id",
-    generator: () => generateId("ip"),
-  })
-);
-
 /**
  * Logger Middleware logs the request and response.
  *
@@ -112,6 +93,7 @@ app.use(csrf());
  * https://hono.dev/docs/middleware/builtin/compress
  */
 // app.use(compress());
+app.use(i18n)
 
 app.route("/", httpRoutes);
 

@@ -5,11 +5,10 @@
     "dev": "bun --bun run --watch ./src/index.ts ",
     "build": "echo 'Build script not implemented'",
     "start": "echo 'Start script not implemented'",
-    "check-types": "tsc --noEmit",
-    "format": "prettier \"**/*.{ts,json}\" --check --cache --cache-strategy=content --cache-location=.prettiercache --write --ignore-path .gitignore",
-    "knip": "knip"
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "@google/genai": "^1.28.0",
     "@hono/standard-validator": "^0.1.5",
     "@node-rs/argon2": "2.0.2",
     "@scalar/hono-api-reference": "0.9.23",
@@ -22,11 +21,9 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
-    "@trivago/prettier-plugin-sort-imports": "5.2.2",
     "@types/bun": "^1.3.1",
     "@types/node": "^24.10.0",
     "knip": "^5.67.1",
-    "prettier": "3.6.2",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.3"
   },
