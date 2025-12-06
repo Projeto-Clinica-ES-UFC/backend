@@ -7,43 +7,16 @@ import patientRoutes from "./patient.routes";
 import agreementRoutes from "./agreement.routes";
 import professionalRoutes from "./professional.routes";
 import appointmentRoutes from "./appointment.routes";
-
+import taskRoutes from "./task.routes";
+import configRoutes from "./config.routes";
+import reportRoutes from "./report.routes";
 
 export const http_routes = new Hono();
-
-http_routes.basePath("/api")
-  .get(
-    "/health",
-    describeRoute({
-      tags: ["System"],
-      summary: "Health check",
-      description: "Returns service health information.",
-      security: [],
-      responses: {
-        200: {
-          description: "Service is healthy",
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  status: {type: "string", example: "ok"},
-                  uptime: {type: "number", description: "Uptime in seconds"}
-                },
-                required: ["status", "uptime"]
-              }
-            }
-          }
-        }
-      }
-    }),
-    (c) => c.json({status: "ok", uptime: process.uptime()})
-  );
-
-http_routes.route("/patients", patientRoutes);
-http_routes.route("/agreements", agreementRoutes);
-http_routes.route("/professionals", professionalRoutes);
+// ...
 http_routes.route("/appointments", appointmentRoutes);
+http_routes.route("/tasks", taskRoutes);
+http_routes.route("/", configRoutes);
+http_routes.route("/reports", reportRoutes);
 
 http_routes
   .get("/openapi",
