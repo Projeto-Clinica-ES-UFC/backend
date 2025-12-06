@@ -2,12 +2,12 @@ import {Hono} from "hono";
 
 import {Scalar} from "@scalar/hono-api-reference";
 import {describeRoute, openAPIRouteHandler} from "hono-openapi";
-import {env} from "@/env";
+import {ENV} from "@/http/env";
 
 
-export const httpRoutes = new Hono();
+export const http_routes = new Hono();
 
-httpRoutes.basePath("/api")
+http_routes.basePath("/api")
   .get(
     "/health",
     describeRoute({
@@ -36,9 +36,9 @@ httpRoutes.basePath("/api")
     (c) => c.json({status: "ok", uptime: process.uptime()})
   );
 
-httpRoutes
+http_routes
   .get("/openapi",
-    openAPIRouteHandler(httpRoutes, {
+    openAPIRouteHandler(http_routes, {
       documentation: {
         info: {
           title: "HONO API",
@@ -47,7 +47,7 @@ httpRoutes
         },
         servers: [
           {
-            url: env.API_BASE_URL,
+            url: ENV.API_BASE_URL,
             description: "Local server",
           },
         ],
@@ -67,7 +67,7 @@ httpRoutes
     "/",
     Scalar({
       theme: "purple",
-      url: `${env.API_BASE_URL}/openapi`,
-      baseServerURL: `${env.API_BASE_URL}/api`,
+      url: `${ENV.API_BASE_URL}/openapi`,
+      baseServerURL: `${ENV.API_BASE_URL}/api`,
     })
   );

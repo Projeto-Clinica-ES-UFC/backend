@@ -5,10 +5,10 @@ import {logger} from "hono/logger";
 
 import {prettyJSON} from "hono/pretty-json";
 
-import {httpRoutes} from "@/http/routes";
-import {type Variables} from "@/types";
+import {http_routes} from "@/http/routes";
+import {type Variables} from "@/http/types";
 
-import {env} from "./env";
+import {ENV} from "./http/env";
 
 const app = new Hono<{ Variables: Variables }>({
   strict: false,
@@ -62,9 +62,9 @@ app.use(csrf());
  */
 // app.use(compress());
 
-app.route("/", httpRoutes);
+app.route("/", http_routes);
 
 export default {
-  port: env.API_PORT,
+  port: ENV.API_PORT,
   fetch: app.fetch,
 };
