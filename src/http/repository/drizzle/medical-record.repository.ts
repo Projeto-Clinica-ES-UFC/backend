@@ -1,0 +1,66 @@
+import { db } from "@/db";
+import { medicalRecord } from "@/db/schema";
+import type { IMedicalRecordRepository, MedicalRecord } from "../medical-record.repository";
+import type { CreateMedicalRecordDTO, UpdateMedicalRecordDTO } from "@/http/dto/medical-record.dto";
+import type { PaginatedResult, PaginationParams } from "@/http/types";
+import { eq, like, count, desc, and } from "drizzle-orm";
+
+export class DrizzleMedicalRecordRepository implements IMedicalRecordRepository {
+	async findByPatientId(patientId: string, { page, limit, q }: PaginationParams): Promise<PaginatedResult<MedicalRecord>> {
+		const offset = (page - 1) * limit;
+		const whereClause = and(
+			eq(medicalRecord.patientId, patientId),
+			q ? like(medicalRecord.title, `%${q}%`) : undefined
+		);
+
+		const [totalResult] = await db.select({ count: count() }).from(medicalRecord).where(whereClause);
+		const total = totalResult.count;
+
+		const data = await db
+			.select()
+			.from(medicalRecord)
+			.where(whereClause)
+			.limit(limit)
+			.offset(offset)
+			.orderBy(desc(medicalRecord.date));
+
+		return {
+			data,
+			meta: { page, limit, total },
+		};
+	}
+
+	async findById(id: string): Promise<MedicalRecord | null> {
+		const [result] = await db.select().from(medicalRecord).where(eq(medicalRecord.id, id));
+		return result || null;
+	}
+
+	async create(data: CreateMedicalRecordDTO & { patientId: string; createdById?: string }): Promise<MedicalRecord> {
+		const id = crypto.randomUUID();
+		const [result] = await db
+			.insert(medicalRecord)
+			.values({
+				...data,
+				id,
+				date: new Date(data.date),
+			})
+			.returning();
+		return result;
+	}
+
+	async update(id: string, data: UpdateMedicalRecordDTO): Promise<MedicalRecord | null> {
+		const updateData: any = { ...data };
+		if (data.date) updateData.date = new Date(data.date);
+
+		const [result] = await db
+			.update(medicalRecord)
+			.set(updateData)
+			.where(eq(medicalRecord.id, id))
+			.returning();
+		return result || null;
+	}
+
+	async delete(id: string): Promise<void> {
+		await db.delete(medicalRecord).where(eq(medicalRecord.id, id));
+	}
+}
