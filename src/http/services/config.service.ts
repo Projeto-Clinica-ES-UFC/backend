@@ -9,7 +9,7 @@ export class ConfigService {
 		return configRepo.getAll();
 	}
 
-	async updateConfig(data: any) {
+	async updateConfig(data: Record<string, unknown>) {
 		return configRepo.update(data);
 	}
 

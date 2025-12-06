@@ -12,7 +12,7 @@ export class DrizzleTaskRepository implements ITaskRepository {
 
 		const conditions = [];
 		if (q) conditions.push(like(task.title, `%${q}%`));
-		if (status) conditions.push(eq(task.status, status as any));
+		if (status) conditions.push(eq(task.status, status as "Pending" | "Completed" | "Canceled"));
 		if (assignedToUserId) conditions.push(eq(task.assignedToUserId, assignedToUserId));
 		if (dueDateUpTo) conditions.push(lte(task.dueDate, new Date(dueDateUpTo)));
 
@@ -42,7 +42,7 @@ export class DrizzleTaskRepository implements ITaskRepository {
 
 	async create(data: CreateTaskDTO): Promise<Task> {
 		const id = crypto.randomUUID();
-		const values: any = { ...data, id };
+		const values: typeof task.$inferInsert = { ...data, id };
 		if (data.dueDate) values.dueDate = new Date(data.dueDate);
 
 		const [result] = await db
@@ -53,7 +53,7 @@ export class DrizzleTaskRepository implements ITaskRepository {
 	}
 
 	async update(id: string, data: UpdateTaskDTO): Promise<Task | null> {
-		const values: any = { ...data };
+		const values: Partial<typeof task.$inferInsert> = { ...data };
 		if (data.dueDate) values.dueDate = new Date(data.dueDate);
 
 		const [result] = await db

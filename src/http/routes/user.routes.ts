@@ -11,10 +11,10 @@ userRoutes.use("*", authMiddleware);
 userRoutes.patch("/me", async (c) => {
 	const sessionUser = c.get("user");
 	const body = await c.req.json();
-	
+
 	if (!sessionUser) return c.json({ error: "Unauthorized" }, 401);
 
-	const updateData: any = {};
+	const updateData: Partial<typeof user.$inferInsert> = {};
 	if (body.name) updateData.name = body.name;
 	if (body.image) updateData.image = body.image;
 

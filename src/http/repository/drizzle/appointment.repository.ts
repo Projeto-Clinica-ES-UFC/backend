@@ -9,7 +9,7 @@ export class DrizzleAppointmentRepository implements IAppointmentRepository {
 	async findAll(params: AppointmentFilterParams): Promise<PaginatedResult<Appointment>> {
 		const { page, limit, q, professionalId, patientId, startDate, endDate, status } = params;
 		const offset = (page - 1) * limit;
-		
+
 		const conditions = [];
 		if (q) conditions.push(like(appointment.title, `%${q}%`));
 		if (professionalId) conditions.push(eq(appointment.professionalId, professionalId));
@@ -57,7 +57,7 @@ export class DrizzleAppointmentRepository implements IAppointmentRepository {
 	}
 
 	async update(id: string, data: UpdateAppointmentDTO): Promise<Appointment | null> {
-		const updateData: any = { ...data };
+		const updateData: Partial<typeof appointment.$inferInsert> = { ...data };
 		if (data.start) updateData.start = new Date(data.start);
 		if (data.end) updateData.end = new Date(data.end);
 

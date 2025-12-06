@@ -49,7 +49,7 @@ export class DrizzleMedicalRecordRepository implements IMedicalRecordRepository 
 	}
 
 	async update(id: string, data: UpdateMedicalRecordDTO): Promise<MedicalRecord | null> {
-		const updateData: any = { ...data };
+		const updateData: Partial<typeof medicalRecord.$inferInsert> = { ...data };
 		if (data.date) updateData.date = new Date(data.date);
 
 		const [result] = await db
