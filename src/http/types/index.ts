@@ -8,3 +8,18 @@ export type Variables = RequestIdVariables & {
 	session: typeof auth.$Infer.Session.session | null;
 };
 
+export type PaginatedResult<T> = {
+	data: T[];
+	meta: {
+		page: number;
+		limit: number;
+		total: number;
+	};
+};
+
+export type PaginationParams = {
+	page: number;
+	limit: number;
+	q?: string;
+};
+

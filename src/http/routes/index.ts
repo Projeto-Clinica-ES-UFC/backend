@@ -3,6 +3,9 @@ import {Hono} from "hono";
 import {Scalar} from "@scalar/hono-api-reference";
 import {describeRoute, openAPIRouteHandler} from "hono-openapi";
 import {ENV} from "@/http/env";
+import patientRoutes from "./patient.routes";
+import agreementRoutes from "./agreement.routes";
+import professionalRoutes from "./professional.routes";
 
 
 export const http_routes = new Hono();
@@ -35,6 +38,10 @@ http_routes.basePath("/api")
     }),
     (c) => c.json({status: "ok", uptime: process.uptime()})
   );
+
+http_routes.route("/patients", patientRoutes);
+http_routes.route("/agreements", agreementRoutes);
+http_routes.route("/professionals", professionalRoutes);
 
 http_routes
   .get("/openapi",
