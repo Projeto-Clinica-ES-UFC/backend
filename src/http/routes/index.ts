@@ -6,6 +6,7 @@ import {ENV} from "@/http/env";
 import patientRoutes from "./patient.routes";
 import agreementRoutes from "./agreement.routes";
 import professionalRoutes from "./professional.routes";
+import appointmentRoutes from "./appointment.routes";
 
 
 export const http_routes = new Hono();
@@ -42,6 +43,7 @@ http_routes.basePath("/api")
 http_routes.route("/patients", patientRoutes);
 http_routes.route("/agreements", agreementRoutes);
 http_routes.route("/professionals", professionalRoutes);
+http_routes.route("/appointments", appointmentRoutes);
 
 http_routes
   .get("/openapi",
