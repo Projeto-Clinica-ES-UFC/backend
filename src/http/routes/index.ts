@@ -10,13 +10,13 @@ import appointmentRoutes from "./appointment.routes";
 import taskRoutes from "./task.routes";
 import configRoutes from "./config.routes";
 import reportRoutes from "./report.routes";
+import userRoutes from "./user.routes";
 
 export const http_routes = new Hono();
 // ...
-http_routes.route("/appointments", appointmentRoutes);
-http_routes.route("/tasks", taskRoutes);
 http_routes.route("/", configRoutes);
 http_routes.route("/reports", reportRoutes);
+http_routes.route("/", userRoutes);
 
 http_routes
   .get("/openapi",

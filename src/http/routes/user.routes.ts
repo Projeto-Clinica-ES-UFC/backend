@@ -1,0 +1,30 @@
+import { Hono } from "hono";
+import { authMiddleware } from "@/http/middlewares/auth-middleware";
+import { db } from "@/db";
+import { user } from "@/db/schema";
+import { eq } from "drizzle-orm";
+
+const userRoutes = new Hono();
+
+userRoutes.use("*", authMiddleware);
+
+userRoutes.patch("/me", async (c) => {
+	const sessionUser = c.get("user");
+	const body = await c.req.json();
+	
+	if (!sessionUser) return c.json({ error: "Unauthorized" }, 401);
+
+	const updateData: any = {};
+	if (body.name) updateData.name = body.name;
+	if (body.image) updateData.image = body.image;
+
+	// Add more fields if needed
+
+	if (Object.keys(updateData).length > 0) {
+		await db.update(user).set(updateData).where(eq(user.id, sessionUser.id));
+	}
+
+	return c.json({ success: true });
+});
+
+export default userRoutes;
