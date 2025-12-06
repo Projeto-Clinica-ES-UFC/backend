@@ -4,7 +4,7 @@ This document defines the backend requirements to support the frontend of this c
 
 
 ## Overview
-- Suggested Base URL: `https://api.your-clinic.com`
+- Suggested Base URL: `localhost
 - API Version: `/api` prefix (no explicit versioning in the URL)
 - Format: JSON by default; uploads via `multipart/form-data`.
 - Suggested Time zone: `America/Fortaleza` (configurable); all times in ISO 8601 with offset.

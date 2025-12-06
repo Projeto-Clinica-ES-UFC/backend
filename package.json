@@ -18,6 +18,8 @@
     "db:local": "turso dev --db-file local.db"
   },
   "dependencies": {
+    "@hono/standard-validator": "^0.2.0",
+    "@libsql/client": "^0.14.0",
     "@scalar/hono-api-reference": "^0.9.26",
     "better-auth": "^1.4.5",
     "dotenv": "^17.2.2",
@@ -25,7 +27,6 @@
     "hono": "^4.8.2",
     "hono-openapi": "^1.1.2",
     "libsql": "^0.5.22",
-    "@libsql/client": "^0.14.0",
     "zod": "^4.1.11"
   },
   "devDependencies": {
