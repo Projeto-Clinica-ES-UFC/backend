@@ -75,9 +75,6 @@ web_modules/
 # Yarn Integrity file
 .yarn-integrity
 
-# dotenv environment variable files
-.env
-
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 .parcel-cache
@@ -124,9 +121,15 @@ dist
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 
+.vscode
+.idea
+
 # yarn v2
 .yarn/cache
 .yarn/unplugged
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Local DB
+*.db*

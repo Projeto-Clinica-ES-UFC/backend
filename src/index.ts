@@ -2,11 +2,8 @@ import {Hono} from "hono";
 import {cors} from "hono/cors";
 import {csrf} from "hono/csrf";
 import {logger} from "hono/logger";
-import {getConnInfo} from "hono/vercel";
 
-import {rateLimiter} from "hono-rate-limiter";
 import {prettyJSON} from "hono/pretty-json";
-import {i18n} from "@/http/middlewares/i18n";
 
 import {httpRoutes} from "@/http/routes";
 import {type Variables} from "@/types";
@@ -25,35 +22,6 @@ const app = new Hono<{ Variables: Variables }>({
  * https://hono.dev/docs/middleware/builtin/pretty-json
  */
 app.use(prettyJSON());
-
-/**
- * Rate limiting middleware for Hono. Use to limit repeated requests to public APIs and/or endpoints such as password reset
- *
- * Read more about the Rate Limiting Middleware here:
- * https://github.com/rhinobase/hono-rate-limiter/blob/main/README.md
- */
-app.use(
-  rateLimiter({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    /**
-     * Limit each IP to 100 requests per `window` (here, per 15 minutes).
-     */
-
-    limit: 100,
-    /**
-     * draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
-     */
-    standardHeaders: "draft-6",
-    /**
-     * Method to generate custom identifiers for clients.
-     */
-    keyGenerator: c => {
-      const info = getConnInfo(c);
-      return info.remote.address as string;
-    },
-    message: {message: "Too many requests, please try again later."},
-  })
-);
 /**
  * Logger Middleware logs the request and response.
  *
@@ -93,7 +61,6 @@ app.use(csrf());
  * https://hono.dev/docs/middleware/builtin/compress
  */
 // app.use(compress());
-app.use(i18n)
 
 app.route("/", httpRoutes);
 

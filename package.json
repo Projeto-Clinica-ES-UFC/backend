@@ -1,34 +1,50 @@
 {
-  "name": "hono-boilerplate",
+  "name": "es-clinica-backend2",
   "type": "module",
   "scripts": {
-    "dev": "bun --bun run --watch ./src/index.ts ",
-    "build": "echo 'Build script not implemented'",
-    "start": "echo 'Start script not implemented'",
-    "check-types": "tsc --noEmit"
+    "dev": "bun run --hot src/index.ts",
+    "build": "tsdown",
+    "compile": "bun build --compile --minify --sourcemap --bytecode ./src/index.ts --outfile server",
+    "start": "bun run dist/index.js",
+    "check-types": "tsc --noEmit",
+    "lint": "bun run lint:ox && bun run lint:es",
+    "lint:ox": "oxlint",
+    "lint:es": "eslint . --max-warnings 0",
+    "prepare": "husky",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:local": "turso dev --db-file local.db"
   },
   "dependencies": {
-    "@google/genai": "^1.28.0",
-    "@hono/standard-validator": "^0.1.5",
-    "@node-rs/argon2": "2.0.2",
-    "@scalar/hono-api-reference": "0.9.23",
-    "arctic": "3.7.0",
-    "dotenv": "17.2.3",
-    "hono": "^4.10.4",
-    "hono-openapi": "^1.1.1",
-    "hono-rate-limiter": "0.4.2",
-    "nanoid": "5.1.6",
-    "zod": "^4.1.12"
+    "@scalar/hono-api-reference": "^0.9.26",
+    "better-auth": "^1.4.5",
+    "dotenv": "^17.2.2",
+    "drizzle-orm": "^0.44.2",
+    "hono": "^4.8.2",
+    "hono-openapi": "^1.1.2",
+    "libsql": "^0.5.22",
+    "@libsql/client": "^0.14.0",
+    "zod": "^4.1.11"
   },
   "devDependencies": {
-    "@types/bun": "^1.3.1",
-    "@types/node": "^24.10.0",
-    "knip": "^5.67.1",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.46.3"
+    "@eslint/js": "^9.39.1",
+    "@types/bun": "^1.2.6",
+    "drizzle-kit": "^0.31.2",
+    "eslint": "^9.39.1",
+    "globals": "^16.5.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.2",
+    "oxlint": "^1.12.0",
+    "tsdown": "^0.16.5",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.48.1"
   },
-  "engines": {
-    "bun": ">=1.3.1"
-  },
-  "packageManager": "bun@1.3.1"
+  "lint-staged": {
+    "**/*.{js,mjs,cjs,jsx,ts,mts,cts,tsx,vue,astro,svelte}": [
+      "oxlint",
+      "eslint --max-warnings 0"
+    ]
+  }
 }
