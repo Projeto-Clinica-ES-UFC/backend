@@ -1,8 +1,9 @@
 import { Hono } from "hono";
 import { reportService } from "@/http/services/report.service";
 import { authMiddleware } from "@/http/middlewares/auth-middleware";
+import type { Variables } from "@/http/types";
 
-const reportRoutes = new Hono();
+const reportRoutes = new Hono<{ Variables: Variables }>();
 
 reportRoutes.use("*", authMiddleware);
 

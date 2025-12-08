@@ -19,7 +19,7 @@ export class DrizzleTaskRepository implements ITaskRepository {
 		const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
 		const [totalResult] = await db.select({ count: count() }).from(task).where(whereClause);
-		const total = totalResult.count;
+		const total = totalResult?.count ?? 0;
 
 		const data = await db
 			.select()
@@ -42,19 +42,23 @@ export class DrizzleTaskRepository implements ITaskRepository {
 
 	async create(data: CreateTaskDTO): Promise<Task> {
 		const id = crypto.randomUUID();
-		const values: typeof task.$inferInsert = { ...data, id };
-		if (data.dueDate) values.dueDate = new Date(data.dueDate);
+        const { dueDate, ...rest } = data;
+		const values: typeof task.$inferInsert = { ...rest, id };
+		if (dueDate) values.dueDate = new Date(dueDate);
 
 		const [result] = await db
 			.insert(task)
 			.values(values)
 			.returning();
+        
+        if (!result) throw new Error("Failed to create task");
 		return result;
 	}
 
 	async update(id: string, data: UpdateTaskDTO): Promise<Task | null> {
-		const values: Partial<typeof task.$inferInsert> = { ...data };
-		if (data.dueDate) values.dueDate = new Date(data.dueDate);
+        const { dueDate, ...rest } = data;
+		const values: Partial<typeof task.$inferInsert> = { ...rest };
+		if (dueDate) values.dueDate = new Date(dueDate);
 
 		const [result] = await db
 			.update(task)

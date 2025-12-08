@@ -14,7 +14,7 @@ export class DrizzleProfessionalRepository implements IProfessionalRepository {
 		}
 
 		const [totalResult] = await db.select({ count: count() }).from(professional).where(whereClause);
-		const total = totalResult.count;
+		const total = totalResult?.count ?? 0;
 
 		const data = await db
 			.select()
@@ -46,6 +46,8 @@ export class DrizzleProfessionalRepository implements IProfessionalRepository {
 			.insert(professional)
 			.values({ ...data, id })
 			.returning();
+        
+        if (!result) throw new Error("Failed to create professional");
 		return result;
 	}
 

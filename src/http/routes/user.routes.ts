@@ -3,8 +3,9 @@ import { authMiddleware } from "@/http/middlewares/auth-middleware";
 import { db } from "@/db";
 import { user } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import type { Variables } from "@/http/types";
 
-const userRoutes = new Hono();
+const userRoutes = new Hono<{ Variables: Variables }>();
 
 userRoutes.use("*", authMiddleware);
 

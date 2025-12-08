@@ -2,8 +2,9 @@ import { Hono } from "hono";
 import { appointmentService } from "@/http/services/appointment.service";
 import { createAppointmentSchema, updateAppointmentSchema } from "@/http/dto/appointment.dto";
 import { authMiddleware } from "@/http/middlewares/auth-middleware";
+import type { Variables } from "@/http/types";
 
-const appointmentRoutes = new Hono();
+const appointmentRoutes = new Hono<{ Variables: Variables }>();
 
 appointmentRoutes.use("*", authMiddleware);
 

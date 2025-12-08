@@ -6,8 +6,9 @@ import { medicalRecordService } from "@/http/services/medical-record.service";
 import { anamnesisService } from "@/http/services/anamnesis.service";
 import { createMedicalRecordSchema, updateMedicalRecordSchema } from "@/http/dto/medical-record.dto";
 import { upsertAnamnesisSchema } from "@/http/dto/anamnesis.dto";
+import type { Variables } from "@/http/types";
 
-const patientRoutes = new Hono();
+const patientRoutes = new Hono<{ Variables: Variables }>();
 
 patientRoutes.use("*", authMiddleware);
 

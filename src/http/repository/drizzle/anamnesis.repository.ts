@@ -25,6 +25,8 @@ export class DrizzleAnamnesisRepository implements IAnamnesisRepository {
 				data: data.data,
 			})
 			.returning();
+        
+        if (!result) throw new Error("Failed to create anamnesis");
 		return result;
 	}
 

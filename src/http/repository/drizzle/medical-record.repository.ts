@@ -14,7 +14,7 @@ export class DrizzleMedicalRecordRepository implements IMedicalRecordRepository 
 		);
 
 		const [totalResult] = await db.select({ count: count() }).from(medicalRecord).where(whereClause);
-		const total = totalResult.count;
+		const total = totalResult?.count ?? 0;
 
 		const data = await db
 			.select()
@@ -45,12 +45,15 @@ export class DrizzleMedicalRecordRepository implements IMedicalRecordRepository 
 				date: new Date(data.date),
 			})
 			.returning();
+        
+        if (!result) throw new Error("Failed to create medical record");
 		return result;
 	}
 
 	async update(id: string, data: UpdateMedicalRecordDTO): Promise<MedicalRecord | null> {
-		const updateData: Partial<typeof medicalRecord.$inferInsert> = { ...data };
-		if (data.date) updateData.date = new Date(data.date);
+        const { date, ...rest } = data;
+		const updateData: Partial<typeof medicalRecord.$inferInsert> = { ...rest };
+		if (date) updateData.date = new Date(date);
 
 		const [result] = await db
 			.update(medicalRecord)

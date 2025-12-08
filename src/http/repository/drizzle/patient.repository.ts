@@ -14,7 +14,7 @@ export class DrizzlePatientRepository implements IPatientRepository {
 		}
 
 		const [totalResult] = await db.select({ count: count() }).from(patient).where(whereClause);
-		const total = totalResult.count;
+		const total = totalResult?.count ?? 0;
 
 		const data = await db
 			.select()
@@ -41,6 +41,8 @@ export class DrizzlePatientRepository implements IPatientRepository {
 			.insert(patient)
 			.values({ ...data, id })
 			.returning();
+        
+        if (!result) throw new Error("Failed to create patient");
 		return result;
 	}
 

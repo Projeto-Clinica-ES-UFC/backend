@@ -14,7 +14,7 @@ export class DrizzleAgreementRepository implements IAgreementRepository {
 		}
 
 		const [totalResult] = await db.select({ count: count() }).from(agreement).where(whereClause);
-		const total = totalResult.count;
+		const total = totalResult?.count ?? 0;
 
 		const data = await db
 			.select()
@@ -41,6 +41,10 @@ export class DrizzleAgreementRepository implements IAgreementRepository {
 			.insert(agreement)
 			.values({ ...data, id })
 			.returning();
+            
+        if (!result) {
+            throw new Error("Failed to create agreement");
+        }
 		return result;
 	}
 

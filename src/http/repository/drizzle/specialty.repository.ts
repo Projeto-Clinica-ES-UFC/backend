@@ -11,6 +11,8 @@ export class DrizzleSpecialtyRepository implements ISpecialtyRepository {
 	async create(name: string): Promise<Specialty> {
 		const id = crypto.randomUUID();
 		const [result] = await db.insert(specialty).values({ id, name }).returning();
+        
+        if (!result) throw new Error("Failed to create specialty");
 		return result;
 	}
 
