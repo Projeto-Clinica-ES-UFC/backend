@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { describeRoute } from "hono-openapi";
 import { authMiddleware } from "@/http/middlewares/auth-middleware";
 import { db } from "@/db";
 import { user } from "@/db/schema";
@@ -9,7 +10,9 @@ const userRoutes = new Hono<{ Variables: Variables }>();
 
 userRoutes.use("*", authMiddleware);
 
-userRoutes.patch("/me", async (c) => {
+userRoutes.patch("/me", describeRoute({
+	description: "Update current user profile",
+}), async (c) => {
 	const sessionUser = c.get("user");
 	const body = await c.req.json();
 

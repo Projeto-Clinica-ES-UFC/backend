@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { describeRoute } from "hono-openapi";
 import { appointmentService } from "@/http/services/appointment.service";
 import { createAppointmentSchema, updateAppointmentSchema } from "@/http/dto/appointment.dto";
 import { authMiddleware } from "@/http/middlewares/auth-middleware";
@@ -8,7 +9,9 @@ const appointmentRoutes = new Hono<{ Variables: Variables }>();
 
 appointmentRoutes.use("*", authMiddleware);
 
-appointmentRoutes.get("/", async (c) => {
+appointmentRoutes.get("/", describeRoute({
+	description: "List all appointments",
+}), async (c) => {
 	const page = Number(c.req.query("page") || 1);
 	const limit = Number(c.req.query("limit") || 20);
 	const q = c.req.query("q");
@@ -31,13 +34,17 @@ appointmentRoutes.get("/", async (c) => {
 	return c.json(result);
 });
 
-appointmentRoutes.get("/:id", async (c) => {
+appointmentRoutes.get("/:id", describeRoute({
+	description: "Get appointment by ID",
+}), async (c) => {
 	const id = c.req.param("id");
 	const result = await appointmentService.getById(id);
 	return c.json(result);
 });
 
-appointmentRoutes.post("/", async (c) => {
+appointmentRoutes.post("/", describeRoute({
+	description: "Create a new appointment",
+}), async (c) => {
 	const user = c.get("user");
 	const body = await c.req.json();
 	const validated = createAppointmentSchema.parse(body);
@@ -45,7 +52,9 @@ appointmentRoutes.post("/", async (c) => {
 	return c.json(result, 201);
 });
 
-appointmentRoutes.patch("/:id", async (c) => {
+appointmentRoutes.patch("/:id", describeRoute({
+	description: "Update an appointment",
+}), async (c) => {
 	const id = c.req.param("id");
 	const body = await c.req.json();
 	const validated = updateAppointmentSchema.parse(body);
@@ -53,7 +62,9 @@ appointmentRoutes.patch("/:id", async (c) => {
 	return c.json(result);
 });
 
-appointmentRoutes.delete("/:id", async (c) => {
+appointmentRoutes.delete("/:id", describeRoute({
+	description: "Delete an appointment",
+}), async (c) => {
 	const id = c.req.param("id");
 	await appointmentService.delete(id);
 	return c.body(null, 204);

@@ -6,6 +6,11 @@ import {ENV} from "@/http/env";
 import configRoutes from "./config.routes";
 import reportRoutes from "./report.routes";
 import userRoutes from "./user.routes";
+import agreementRoutes from "./agreement.routes";
+import appointmentRoutes from "./appointment.routes";
+import patientRoutes from "./patient.routes";
+import professionalRoutes from "./professional.routes";
+import taskRoutes from "./task.routes";
 
 export const http_routes = new Hono();
 
@@ -50,3 +55,8 @@ http_routes
 http_routes.route("/", configRoutes);
 http_routes.route("/reports", reportRoutes);
 http_routes.route("/", userRoutes);
+http_routes.route("/agreements", agreementRoutes);
+http_routes.route("/appointments", appointmentRoutes);
+http_routes.route("/patients", patientRoutes);
+http_routes.route("/professionals", professionalRoutes);
+http_routes.route("/tasks", taskRoutes);
