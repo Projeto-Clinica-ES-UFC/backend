@@ -25,6 +25,14 @@ export class ProfessionalService {
 		}
 		return professionalRepository.update(id, data);
 	}
+
+	async delete(id: string) {
+		const professional = await professionalRepository.findById(id);
+		if (!professional) {
+			throw new HTTPException(404, { message: "Professional not found" });
+		}
+		return professionalRepository.delete(id);
+	}
 }
 
 export const professionalService = new ProfessionalService();

@@ -36,4 +36,12 @@ professionalRoutes.patch("/:id", describeRoute({
 	return c.json(result);
 });
 
+professionalRoutes.delete("/:id", describeRoute({
+	description: "Delete a professional",
+}), async (c) => {
+	const id = c.req.param("id");
+	const result = await professionalService.delete(id);
+	return c.json(result);
+});
+
 export default professionalRoutes;

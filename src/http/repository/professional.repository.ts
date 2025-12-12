@@ -11,4 +11,5 @@ export interface IProfessionalRepository {
 	update(id: string, data: UpdateProfessionalDTO): Promise<Professional | null>;
     // create might be needed if we manually create professionals from existing users
     create(data: { userId: string; name: string }): Promise<Professional>;
+	delete(id: string): Promise<Professional | null>;
 }

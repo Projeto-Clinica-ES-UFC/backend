@@ -59,4 +59,12 @@ export class DrizzleProfessionalRepository implements IProfessionalRepository {
 			.returning();
 		return result || null;
 	}
+
+	async delete(id: string): Promise<Professional | null> {
+		const [result] = await db
+			.delete(professional)
+			.where(eq(professional.id, id))
+			.returning();
+		return result || null;
+	}
 }
