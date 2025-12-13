@@ -10,7 +10,7 @@ export class AgreementService {
 		return agreementRepository.findAll(params);
 	}
 
-	async getById(id: string) {
+	async getById(id: number) {
 		const agreement = await agreementRepository.findById(id);
 		if (!agreement) {
 			throw new HTTPException(404, { message: "Agreement not found" });
@@ -22,7 +22,7 @@ export class AgreementService {
 		return agreementRepository.create(data);
 	}
 
-	async update(id: string, data: UpdateAgreementDTO) {
+	async update(id: number, data: UpdateAgreementDTO) {
 		const exists = await agreementRepository.findById(id);
 		if (!exists) {
 			throw new HTTPException(404, { message: "Agreement not found" });
@@ -30,7 +30,7 @@ export class AgreementService {
 		return agreementRepository.update(id, data);
 	}
 
-	async delete(id: string) {
+	async delete(id: number) {
 		const exists = await agreementRepository.findById(id);
 		if (!exists) {
 			throw new HTTPException(404, { message: "Agreement not found" });

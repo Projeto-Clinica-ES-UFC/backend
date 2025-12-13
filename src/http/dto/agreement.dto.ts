@@ -2,9 +2,7 @@ import { z } from "zod";
 
 export const createAgreementSchema = z.object({
 	name: z.string().min(1, "Name is required"),
-	cnpj: z.string().optional(),
-	ansRegistration: z.string().optional(),
-	active: z.boolean().default(true),
+	discount: z.number().default(0),
 });
 
 export const updateAgreementSchema = createAgreementSchema.partial();

@@ -2,7 +2,7 @@ import {Hono} from "hono";
 
 import {Scalar} from "@scalar/hono-api-reference";
 import {openAPIRouteHandler} from "hono-openapi";
-import {ENV} from "@/http/env";
+import {env} from "@/env";
 import configRoutes from "./config.routes";
 import reportRoutes from "./report.routes";
 import userRoutes from "./user.routes";
@@ -26,7 +26,7 @@ http_routes
         },
         servers: [
           {
-            url: ENV.API_BASE_URL,
+            url: env?.API_BASE_URL || "", // Provide default empty string
             description: "Local server",
           },
         ],
@@ -46,8 +46,8 @@ http_routes
     "/",
     Scalar({
       theme: "purple",
-      url: `${ENV.API_BASE_URL}/openapi`,
-      baseServerURL: `${ENV.API_BASE_URL}/api`,
+      url: `${env?.API_BASE_URL || ""}/openapi`,
+      baseServerURL: `${env?.API_BASE_URL || ""}/api`,
     })
   );
 

@@ -3,15 +3,15 @@ import { appointment } from "@/db/schema";
 import type { IAppointmentRepository, Appointment, AppointmentFilterParams } from "../appointment.repository";
 import type { CreateAppointmentDTO, UpdateAppointmentDTO } from "@/http/dto/appointment.dto";
 import type { PaginatedResult } from "@/http/types";
-import { eq, like, count, desc, and, gte, lte, lt, gt, ne, inArray } from "drizzle-orm";
+import { eq, count, desc, and, gte, lte, lt, gt, ne, inArray } from "drizzle-orm";
 
 export class DrizzleAppointmentRepository implements IAppointmentRepository {
 	async findAll(params: AppointmentFilterParams): Promise<PaginatedResult<Appointment>> {
-		const { page, limit, q, professionalId, patientId, startDate, endDate, status } = params;
+		const { page, limit, professionalId, patientId, startDate, endDate, status } = params;
 		const offset = (page - 1) * limit;
 
 		const conditions = [];
-		if (q) conditions.push(like(appointment.title, `%${q}%`));
+		// if (q) ... title removed
 		if (professionalId) conditions.push(eq(appointment.professionalId, professionalId));
 		if (patientId) conditions.push(eq(appointment.patientId, patientId));
 		if (startDate) conditions.push(gte(appointment.start, new Date(startDate)));
@@ -20,7 +20,7 @@ export class DrizzleAppointmentRepository implements IAppointmentRepository {
 			conditions.push(
 				inArray(
 					appointment.status,
-					status as ("Scheduled" | "Confirmed" | "InService" | "Finished" | "Canceled" | "Missed")[]
+					status as ("Pendente" | "Confirmado" | "Realizado" | "Cancelado")[]
 				)
 			);
 		}
@@ -44,18 +44,16 @@ export class DrizzleAppointmentRepository implements IAppointmentRepository {
 		};
 	}
 
-	async findById(id: string): Promise<Appointment | null> {
+	async findById(id: number): Promise<Appointment | null> {
 		const [result] = await db.select().from(appointment).where(eq(appointment.id, id));
 		return result || null;
 	}
 
-	async create(data: CreateAppointmentDTO & { createdById?: string }): Promise<Appointment> {
-		const id = crypto.randomUUID();
+	async create(data: CreateAppointmentDTO): Promise<Appointment> {
 		const [result] = await db
 			.insert(appointment)
 			.values({
 				...data,
-				id,
 				start: new Date(data.start),
 				end: new Date(data.end),
 			})
@@ -65,7 +63,7 @@ export class DrizzleAppointmentRepository implements IAppointmentRepository {
 		return result;
 	}
 
-	async update(id: string, data: UpdateAppointmentDTO): Promise<Appointment | null> {
+	async update(id: number, data: UpdateAppointmentDTO): Promise<Appointment | null> {
 		const { start, end, ...rest } = data;
 		const updateData: Partial<typeof appointment.$inferInsert> = { ...rest };
 		if (start) updateData.start = new Date(start);
@@ -79,16 +77,16 @@ export class DrizzleAppointmentRepository implements IAppointmentRepository {
 		return result || null;
 	}
 
-	async delete(id: string): Promise<void> {
+	async delete(id: number): Promise<void> {
 		await db.delete(appointment).where(eq(appointment.id, id));
 	}
 
-	async findOverlaps(professionalId: string, start: Date, end: Date, excludeId?: string): Promise<Appointment[]> {
+	async findOverlaps(professionalId: number, start: Date, end: Date, excludeId?: number): Promise<Appointment[]> {
 		const conditions = [
 			eq(appointment.professionalId, professionalId),
 			lt(appointment.start, end),
 			gt(appointment.end, start),
-			ne(appointment.status, "Canceled"),
+			ne(appointment.status, "Cancelado"),
 		];
 
 		if (excludeId) {

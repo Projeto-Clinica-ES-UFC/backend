@@ -1,4 +1,7 @@
+import { config } from "dotenv";
 import { z } from "zod";
+
+config();
 
 const env_shape = z.object({
   NODE_ENV: z
@@ -15,7 +18,6 @@ const safe_env = env_shape.safeParse(process.env);
 
 if (!safe_env.success) {
   console.error("Invalid environment variables:", safe_env.error);
-  process.exit(1);
 }
 
-export const ENV = safe_env.data;
+export const env = safe_env.data;

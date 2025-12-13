@@ -6,11 +6,11 @@ import { HTTPException } from "hono/http-exception";
 const taskRepository = new DrizzleTaskRepository();
 
 export class TaskService {
-	async getAll(params: PaginationParams & { status?: string; assignedToUserId?: string; dueDateUpTo?: string }) {
+	async getAll(params: PaginationParams & { assignedToId?: number; dueDateUpTo?: string }) {
 		return taskRepository.findAll(params);
 	}
 
-	async getById(id: string) {
+	async getById(id: number) {
 		const task = await taskRepository.findById(id);
 		if (!task) {
 			throw new HTTPException(404, { message: "Task not found" });
@@ -22,7 +22,7 @@ export class TaskService {
 		return taskRepository.create(data);
 	}
 
-	async update(id: string, data: UpdateTaskDTO) {
+	async update(id: number, data: UpdateTaskDTO) {
 		const exists = await taskRepository.findById(id);
 		if (!exists) {
 			throw new HTTPException(404, { message: "Task not found" });
@@ -30,7 +30,7 @@ export class TaskService {
 		return taskRepository.update(id, data);
 	}
 
-	async delete(id: string) {
+	async delete(id: number) {
 		const exists = await taskRepository.findById(id);
 		if (!exists) {
 			throw new HTTPException(404, { message: "Task not found" });

@@ -5,9 +5,9 @@ import type { PaginatedResult, PaginationParams } from "@/http/types";
 export type Task = typeof task.$inferSelect;
 
 export interface ITaskRepository {
-	findAll(params: PaginationParams & { status?: string; assignedToUserId?: string; dueDateUpTo?: string }): Promise<PaginatedResult<Task>>;
-	findById(id: string): Promise<Task | null>;
+	findAll(params: PaginationParams & { assignedToId?: number; dueDateUpTo?: string }): Promise<PaginatedResult<Task>>;
+	findById(id: number): Promise<Task | null>;
 	create(data: CreateTaskDTO): Promise<Task>;
-	update(id: string, data: UpdateTaskDTO): Promise<Task | null>;
-	delete(id: string): Promise<void>;
+	update(id: number, data: UpdateTaskDTO): Promise<Task | null>;
+	delete(id: number): Promise<void>;
 }

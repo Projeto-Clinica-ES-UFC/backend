@@ -8,7 +8,8 @@ import {prettyJSON} from "hono/pretty-json";
 import {http_routes} from "@/http/routes";
 import {type Variables} from "@/http/types";
 
-import {ENV} from "./http/env";
+import {env} from "./env";
+import {auth} from "@/better-auth";
 
 const app = new Hono<{ Variables: Variables }>({
   strict: false,
@@ -38,11 +39,11 @@ app.use(logger());
  */
 app.use(
   cors({
-    origin: "*",
+    origin: ["http://localhost:5173", "http://localhost:3000"],
     credentials: true,
     maxAge: 60 * 60 * 24 * 7, // 7 days
     allowHeaders: ["Content-Type", "Authorization"],
-    allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   })
 );
 
@@ -52,7 +53,7 @@ app.use(
  * Read more about the CSRF Protection Middleware here:
  * https://hono.dev/docs/middleware/builtin/csrf
  */
-app.use(csrf());
+app.use(csrf({origin: "*"}));
 
 /**
  * This middleware compresses the response body, according to `Accept-Encoding` request header.
@@ -62,9 +63,11 @@ app.use(csrf());
  */
 // app.use(compress());
 
+app.all("/api/auth/*", (c) => auth.handler(c.req.raw));
+
 app.route("/", http_routes);
 
 export default {
-  port: ENV.API_PORT,
+  port: env?.API_PORT,
   fetch: app.fetch,
 };

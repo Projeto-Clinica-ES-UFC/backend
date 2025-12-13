@@ -1,6 +1,6 @@
 import {createMiddleware} from "hono/factory";
 import type {Variables} from "@/http/types";
-import {auth} from "@/http/utils/better-auth";
+import {auth} from "@/better-auth";
 
 type Env = {
   Variables: Variables;

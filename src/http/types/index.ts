@@ -1,5 +1,5 @@
 import type { RequestIdVariables } from "hono/request-id";
-import { auth } from "@/http/utils/better-auth";
+import { auth } from "@/better-auth";
 
 // Check if this is secure to use.
 // export type Bindings = z.infer<typeof envSchema>;

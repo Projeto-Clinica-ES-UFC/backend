@@ -30,16 +30,15 @@ export class DrizzleAgreementRepository implements IAgreementRepository {
 		};
 	}
 
-	async findById(id: string): Promise<Agreement | null> {
+	async findById(id: number): Promise<Agreement | null> {
 		const [result] = await db.select().from(agreement).where(eq(agreement.id, id));
 		return result || null;
 	}
 
 	async create(data: CreateAgreementDTO): Promise<Agreement> {
-		const id = crypto.randomUUID();
 		const [result] = await db
 			.insert(agreement)
-			.values({ ...data, id })
+			.values({ ...data })
 			.returning();
             
         if (!result) {
@@ -48,7 +47,7 @@ export class DrizzleAgreementRepository implements IAgreementRepository {
 		return result;
 	}
 
-	async update(id: string, data: UpdateAgreementDTO): Promise<Agreement | null> {
+	async update(id: number, data: UpdateAgreementDTO): Promise<Agreement | null> {
 		const [result] = await db
 			.update(agreement)
 			.set(data)
@@ -57,7 +56,7 @@ export class DrizzleAgreementRepository implements IAgreementRepository {
 		return result || null;
 	}
 
-	async delete(id: string): Promise<void> {
+	async delete(id: number): Promise<void> {
 		await db.delete(agreement).where(eq(agreement.id, id));
 	}
 }

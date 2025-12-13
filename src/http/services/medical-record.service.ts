@@ -6,15 +6,15 @@ import { HTTPException } from "hono/http-exception";
 const medicalRecordRepository = new DrizzleMedicalRecordRepository();
 
 export class MedicalRecordService {
-	async getByPatientId(patientId: string, params: PaginationParams) {
+	async getByPatientId(patientId: number, params: PaginationParams) {
 		return medicalRecordRepository.findByPatientId(patientId, params);
 	}
 
-	async create(data: CreateMedicalRecordDTO, patientId: string, userId?: string) {
+	async create(data: CreateMedicalRecordDTO, patientId: number, userId?: string) {
 		return medicalRecordRepository.create({ ...data, patientId, createdById: userId });
 	}
 
-	async update(id: string, data: UpdateMedicalRecordDTO) {
+	async update(id: number, data: UpdateMedicalRecordDTO) {
 		const exists = await medicalRecordRepository.findById(id);
 		if (!exists) {
 			throw new HTTPException(404, { message: "Event not found" });
@@ -22,7 +22,7 @@ export class MedicalRecordService {
 		return medicalRecordRepository.update(id, data);
 	}
 
-	async delete(id: string) {
+	async delete(id: number) {
 		const exists = await medicalRecordRepository.findById(id);
 		if (!exists) {
 			throw new HTTPException(404, { message: "Event not found" });

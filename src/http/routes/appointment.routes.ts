@@ -15,8 +15,8 @@ appointmentRoutes.get("/", describeRoute({
 	const page = Number(c.req.query("page") || 1);
 	const limit = Number(c.req.query("limit") || 20);
 	const q = c.req.query("q");
-	const professionalId = c.req.query("professionalId");
-	const patientId = c.req.query("patientId");
+	const professionalId = c.req.query("professionalId") ? Number(c.req.query("professionalId")) : undefined;
+	const patientId = c.req.query("patientId") ? Number(c.req.query("patientId")) : undefined;
 	const startDate = c.req.query("startDate");
 	const endDate = c.req.query("endDate");
 	const status = c.req.queries("status"); // queries returns array for ?status=A&status=B
@@ -37,7 +37,7 @@ appointmentRoutes.get("/", describeRoute({
 appointmentRoutes.get("/:id", describeRoute({
 	description: "Get appointment by ID",
 }), async (c) => {
-	const id = c.req.param("id");
+	const id = Number(c.req.param("id"));
 	const result = await appointmentService.getById(id);
 	return c.json(result);
 });
@@ -55,7 +55,7 @@ appointmentRoutes.post("/", describeRoute({
 appointmentRoutes.patch("/:id", describeRoute({
 	description: "Update an appointment",
 }), async (c) => {
-	const id = c.req.param("id");
+	const id = Number(c.req.param("id"));
 	const body = await c.req.json();
 	const validated = updateAppointmentSchema.parse(body);
 	const result = await appointmentService.update(id, validated);
@@ -65,7 +65,7 @@ appointmentRoutes.patch("/:id", describeRoute({
 appointmentRoutes.delete("/:id", describeRoute({
 	description: "Delete an appointment",
 }), async (c) => {
-	const id = c.req.param("id");
+	const id = Number(c.req.param("id"));
 	await appointmentService.delete(id);
 	return c.body(null, 204);
 });

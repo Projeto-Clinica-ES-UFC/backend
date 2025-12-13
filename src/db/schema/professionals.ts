@@ -1,15 +1,13 @@
-import { sqliteTable, text, integer, primaryKey } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 import { sql, relations } from "drizzle-orm";
 import { user } from "./auth";
-import { specialty } from "./operational";
 
 export const professional = sqliteTable("professional", {
-	id: text("id").primaryKey(),
+	id: integer("id").primaryKey({ autoIncrement: true }),
 	userId: text("user_id").notNull().references(() => user.id).unique(),
 	name: text("name").notNull(),
-	professionalRegistration: text("professional_registration"),
-	phone: text("phone"),
-	scheduleConfig: text("schedule_config", { mode: "json" }), // JSON: { standardHours: ..., slotDuration: ... }
+    email: text("email"),
+    specialty: text("specialty"),
 	createdAt: integer("created_at", { mode: "timestamp_ms" })
 		.default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
 		.notNull(),
@@ -18,28 +16,10 @@ export const professional = sqliteTable("professional", {
 		.notNull(),
 });
 
-export const professionalSpecialty = sqliteTable("professional_specialty", {
-	professionalId: text("professional_id").notNull().references(() => professional.id),
-	specialtyId: text("specialty_id").notNull().references(() => specialty.id),
-}, (t) => ({
-	pk: primaryKey({ columns: [t.professionalId, t.specialtyId] }),
-}));
-
-export const professionalRelations = relations(professional, ({ one, many }) => ({
+export const professionalRelations = relations(professional, ({ one }) => ({
 	user: one(user, {
 		fields: [professional.userId],
 		references: [user.id],
 	}),
-	specialties: many(professionalSpecialty),
 }));
 
-export const professionalSpecialtyRelations = relations(professionalSpecialty, ({ one }) => ({
-	professional: one(professional, {
-		fields: [professionalSpecialty.professionalId],
-		references: [professional.id],
-	}),
-	specialty: one(specialty, {
-		fields: [professionalSpecialty.specialtyId],
-		references: [specialty.id],
-	}),
-}));

@@ -6,8 +6,8 @@ export type Patient = typeof patient.$inferSelect;
 
 export interface IPatientRepository {
 	findAll(params: PaginationParams): Promise<PaginatedResult<Patient>>;
-	findById(id: string): Promise<Patient | null>;
+	findById(id: number): Promise<Patient | null>;
 	create(data: CreatePatientDTO): Promise<Patient>;
-	update(id: string, data: UpdatePatientDTO): Promise<Patient | null>;
-	delete(id: string): Promise<void>;
+	update(id: number, data: UpdatePatientDTO): Promise<Patient | null>;
+	delete(id: number): Promise<void>;
 }

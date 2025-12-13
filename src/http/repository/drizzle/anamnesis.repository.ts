@@ -5,7 +5,7 @@ import type { UpsertAnamnesisDTO } from "@/http/dto/anamnesis.dto";
 import { eq, desc } from "drizzle-orm";
 
 export class DrizzleAnamnesisRepository implements IAnamnesisRepository {
-	async findLatestByPatientId(patientId: string): Promise<Anamnesis | null> {
+	async findLatestByPatientId(patientId: number): Promise<Anamnesis | null> {
 		const [result] = await db
 			.select()
 			.from(anamnesis)
@@ -15,12 +15,10 @@ export class DrizzleAnamnesisRepository implements IAnamnesisRepository {
 		return result || null;
 	}
 
-	async create(patientId: string, data: UpsertAnamnesisDTO): Promise<Anamnesis> {
-		const id = crypto.randomUUID();
+	async create(patientId: number, data: UpsertAnamnesisDTO): Promise<Anamnesis> {
 		const [result] = await db
 			.insert(anamnesis)
 			.values({
-				id,
 				patientId,
 				data: data.data,
 			})
@@ -30,7 +28,7 @@ export class DrizzleAnamnesisRepository implements IAnamnesisRepository {
 		return result;
 	}
 
-	async findHistory(patientId: string): Promise<Anamnesis[]> {
+	async findHistory(patientId: number): Promise<Anamnesis[]> {
 		return db
 			.select()
 			.from(anamnesis)
