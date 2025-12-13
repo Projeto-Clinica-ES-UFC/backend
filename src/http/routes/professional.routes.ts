@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { describeRoute } from "hono-openapi";
 import { professionalService } from "@/http/services/professional.service";
-import { updateProfessionalSchema } from "@/http/dto/professional.dto";
+import { updateProfessionalSchema, createProfessionalSchema } from "@/http/dto/professional.dto";
 import { authMiddleware } from "@/http/middlewares/auth-middleware";
 
 const professionalRoutes = new Hono();
@@ -21,15 +21,24 @@ professionalRoutes.get("/", describeRoute({
 professionalRoutes.get("/:id", describeRoute({
 	description: "Get professional by ID",
 }), async (c) => {
-	const id = c.req.param("id");
+	const id = Number(c.req.param("id"));
 	const result = await professionalService.getById(id);
 	return c.json(result);
+});
+
+professionalRoutes.post("/", describeRoute({
+	description: "Create a new professional",
+}), async (c) => {
+	const body = await c.req.json();
+	const validated = createProfessionalSchema.parse(body);
+	const result = await professionalService.create(validated);
+	return c.json(result, 201);
 });
 
 professionalRoutes.patch("/:id", describeRoute({
 	description: "Update a professional",
 }), async (c) => {
-	const id = c.req.param("id");
+	const id = Number(c.req.param("id"));
 	const body = await c.req.json();
 	const validated = updateProfessionalSchema.parse(body);
 	const result = await professionalService.update(id, validated);
@@ -39,7 +48,7 @@ professionalRoutes.patch("/:id", describeRoute({
 professionalRoutes.delete("/:id", describeRoute({
 	description: "Delete a professional",
 }), async (c) => {
-	const id = c.req.param("id");
+	const id = Number(c.req.param("id"));
 	const result = await professionalService.delete(id);
 	return c.json(result);
 });

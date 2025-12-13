@@ -26,7 +26,7 @@ patientRoutes.get("/", describeRoute({
 patientRoutes.get("/:id", describeRoute({
 	description: "Get patient by ID",
 }), async (c) => {
-	const id = c.req.param("id");
+	const id = Number(c.req.param("id"));
 	const result = await patientService.getById(id);
 	return c.json(result);
 });
@@ -43,7 +43,7 @@ patientRoutes.post("/", describeRoute({
 patientRoutes.patch("/:id", describeRoute({
 	description: "Update a patient",
 }), async (c) => {
-	const id = c.req.param("id");
+	const id = Number(c.req.param("id"));
 	const body = await c.req.json();
 	const validated = updatePatientSchema.parse(body);
 	const result = await patientService.update(id, validated);
@@ -53,7 +53,7 @@ patientRoutes.patch("/:id", describeRoute({
 patientRoutes.delete("/:id", describeRoute({
 	description: "Delete a patient",
 }), async (c) => {
-	const id = c.req.param("id");
+	const id = Number(c.req.param("id"));
 	await patientService.delete(id);
 	return c.body(null, 204);
 });
@@ -62,7 +62,7 @@ patientRoutes.delete("/:id", describeRoute({
 patientRoutes.get("/:id/medical-record", describeRoute({
 	description: "Get medical records for a patient",
 }), async (c) => {
-	const id = c.req.param("id");
+	const id = Number(c.req.param("id"));
 	const page = Number(c.req.query("page") || 1);
 	const limit = Number(c.req.query("limit") || 20);
 	const q = c.req.query("q");
@@ -73,7 +73,7 @@ patientRoutes.get("/:id/medical-record", describeRoute({
 patientRoutes.post("/:id/medical-record", describeRoute({
 	description: "Create a medical record for a patient",
 }), async (c) => {
-	const id = c.req.param("id");
+	const id = Number(c.req.param("id"));
 	const user = c.get("user");
 	const body = await c.req.json();
 	const validated = createMedicalRecordSchema.parse(body);
@@ -84,7 +84,7 @@ patientRoutes.post("/:id/medical-record", describeRoute({
 patientRoutes.patch("/:id/medical-record/:eventId", describeRoute({
 	description: "Update a medical record",
 }), async (c) => {
-	const eventId = c.req.param("eventId");
+	const eventId = Number(c.req.param("eventId"));
 	const body = await c.req.json();
 	const validated = updateMedicalRecordSchema.parse(body);
 	const result = await medicalRecordService.update(eventId, validated);
@@ -94,7 +94,7 @@ patientRoutes.patch("/:id/medical-record/:eventId", describeRoute({
 patientRoutes.delete("/:id/medical-record/:eventId", describeRoute({
 	description: "Delete a medical record",
 }), async (c) => {
-	const eventId = c.req.param("eventId");
+	const eventId = Number(c.req.param("eventId"));
 	await medicalRecordService.delete(eventId);
 	return c.body(null, 204);
 });
@@ -103,7 +103,7 @@ patientRoutes.delete("/:id/medical-record/:eventId", describeRoute({
 patientRoutes.get("/:id/anamnesis", describeRoute({
 	description: "Get latest anamnesis for a patient",
 }), async (c) => {
-	const id = c.req.param("id");
+	const id = Number(c.req.param("id"));
 	const result = await anamnesisService.getLatest(id);
 	return c.json(result);
 });
@@ -111,7 +111,7 @@ patientRoutes.get("/:id/anamnesis", describeRoute({
 patientRoutes.put("/:id/anamnesis", describeRoute({
 	description: "Upsert anamnesis for a patient",
 }), async (c) => {
-	const id = c.req.param("id");
+	const id = Number(c.req.param("id"));
 	const body = await c.req.json();
 	const validated = upsertAnamnesisSchema.parse(body);
 	const result = await anamnesisService.create(id, validated);
@@ -121,7 +121,7 @@ patientRoutes.put("/:id/anamnesis", describeRoute({
 patientRoutes.get("/:id/anamnesis/history", describeRoute({
 	description: "Get anamnesis history for a patient",
 }), async (c) => {
-	const id = c.req.param("id");
+	const id = Number(c.req.param("id"));
 	const result = await anamnesisService.getHistory(id);
 	return c.json(result);
 });

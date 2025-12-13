@@ -2,15 +2,11 @@ import { z } from "zod";
 
 export const createPatientSchema = z.object({
 	name: z.string().min(1, "Name is required"),
-	cpf: z.string().min(11, "CPF must be at least 11 characters").optional(), // Optional per schema unique constraint but usually required. Logic might enforce it.
+	cpf: z.string().min(11, "CPF must be at least 11 characters").optional(),
 	dateOfBirth: z.string().optional(), // YYYY-MM-DD
-	gender: z.string().optional(),
-	phone: z.string().optional(),
-	agreementId: z.string().optional().nullable(),
-	address: z.string().optional(),
-	city: z.string().optional(),
 	responsibleName: z.string().optional(),
 	responsiblePhone: z.string().optional(),
+	status: z.enum(["Agendado", "Em Atendimento", "Finalizado", "Cancelado"]).optional(),
 });
 
 export const updatePatientSchema = createPatientSchema.partial();

@@ -10,7 +10,7 @@ export class PatientService {
 		return patientRepository.findAll(params);
 	}
 
-	async getById(id: string) {
+	async getById(id: number) {
 		const patient = await patientRepository.findById(id);
 		if (!patient) {
 			throw new HTTPException(404, { message: "Patient not found" });
@@ -24,7 +24,7 @@ export class PatientService {
 		return patientRepository.create(data);
 	}
 
-	async update(id: string, data: UpdatePatientDTO) {
+	async update(id: number, data: UpdatePatientDTO) {
 		const exists = await patientRepository.findById(id);
 		if (!exists) {
 			throw new HTTPException(404, { message: "Patient not found" });
@@ -32,7 +32,7 @@ export class PatientService {
 		return patientRepository.update(id, data);
 	}
 
-	async delete(id: string) {
+	async delete(id: number) {
 		const exists = await patientRepository.findById(id);
 		if (!exists) {
 			throw new HTTPException(404, { message: "Patient not found" });

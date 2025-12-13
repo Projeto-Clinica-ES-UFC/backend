@@ -25,7 +25,7 @@ agreementRoutes.get("/", describeRoute({
 agreementRoutes.get("/:id", describeRoute({
 	description: "Get agreement by ID",
 }), async (c) => {
-	const id = c.req.param("id");
+	const id = Number(c.req.param("id"));
 	const result = await agreementService.getById(id);
 	return c.json(result);
 });
@@ -42,7 +42,7 @@ agreementRoutes.post("/", describeRoute({
 agreementRoutes.patch("/:id", describeRoute({
 	description: "Update an agreement",
 }), async (c) => {
-	const id = c.req.param("id");
+	const id = Number(c.req.param("id"));
 	const body = await c.req.json();
 	const validated = updateAgreementSchema.parse(body);
 	const result = await agreementService.update(id, validated);
@@ -52,7 +52,7 @@ agreementRoutes.patch("/:id", describeRoute({
 agreementRoutes.delete("/:id", describeRoute({
 	description: "Delete an agreement",
 }), async (c) => {
-	const id = c.req.param("id");
+	const id = Number(c.req.param("id"));
 	await agreementService.delete(id);
 	return c.body(null, 204);
 });

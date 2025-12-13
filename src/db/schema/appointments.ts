@@ -2,21 +2,17 @@ import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 import { sql, relations } from "drizzle-orm";
 import { professional } from "./professionals";
 import { patient } from "./patients";
-import { user } from "./auth";
 
 export const appointment = sqliteTable("appointment", {
-	id: text("id").primaryKey(),
-	professionalId: text("professional_id").notNull().references(() => professional.id),
-	patientId: text("patient_id").notNull().references(() => patient.id),
+	id: integer("id").primaryKey({ autoIncrement: true }),
+	professionalId: integer("professional_id").notNull().references(() => professional.id),
+	patientId: integer("patient_id").notNull().references(() => patient.id),
 	start: integer("start", { mode: "timestamp_ms" }).notNull(),
 	end: integer("end", { mode: "timestamp_ms" }).notNull(),
-	title: text("title"),
-	description: text("description"),
-	status: text("status", { enum: ["Scheduled", "Confirmed", "InService", "Finished", "Canceled", "Missed"] })
-		.default("Scheduled")
+	status: text("status", { enum: ["Pendente", "Confirmado", "Realizado", "Cancelado"] })
+		.default("Pendente")
 		.notNull(),
-	location: text("location"),
-	createdById: text("created_by_id").references(() => user.id),
+	unimedPending: integer("unimed_pending", { mode: "boolean" }).default(false),
 	createdAt: integer("created_at", { mode: "timestamp_ms" })
 		.default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
 		.notNull(),
@@ -34,8 +30,5 @@ export const appointmentRelations = relations(appointment, ({ one }) => ({
 		fields: [appointment.patientId],
 		references: [patient.id],
 	}),
-	createdBy: one(user, {
-		fields: [appointment.createdById],
-		references: [user.id],
-	}),
 }));
+

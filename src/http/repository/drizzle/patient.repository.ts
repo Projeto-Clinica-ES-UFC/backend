@@ -30,23 +30,22 @@ export class DrizzlePatientRepository implements IPatientRepository {
 		};
 	}
 
-	async findById(id: string): Promise<Patient | null> {
+	async findById(id: number): Promise<Patient | null> {
 		const [result] = await db.select().from(patient).where(eq(patient.id, id));
 		return result || null;
 	}
 
 	async create(data: CreatePatientDTO): Promise<Patient> {
-		const id = crypto.randomUUID();
 		const [result] = await db
 			.insert(patient)
-			.values({ ...data, id })
+			.values({ ...data })
 			.returning();
         
         if (!result) throw new Error("Failed to create patient");
 		return result;
 	}
 
-	async update(id: string, data: UpdatePatientDTO): Promise<Patient | null> {
+	async update(id: number, data: UpdatePatientDTO): Promise<Patient | null> {
 		const [result] = await db
 			.update(patient)
 			.set(data)
@@ -55,7 +54,7 @@ export class DrizzlePatientRepository implements IPatientRepository {
 		return result || null;
 	}
 
-	async delete(id: string): Promise<void> {
+	async delete(id: number): Promise<void> {
 		await db.delete(patient).where(eq(patient.id, id));
 	}
 }

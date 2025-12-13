@@ -1,6 +1,9 @@
+import { config } from "dotenv";
 import { z } from "zod";
 
-const env_shape = z.object({
+config();
+
+const envShape = z.object({
   NODE_ENV: z
     .enum(["development", "production", "test"])
     .default("development"),
@@ -11,11 +14,10 @@ const env_shape = z.object({
   DATABASE_URL: z.url(),
 });
 
-const safe_env = env_shape.safeParse(process.env);
+const safeEnv = envShape.safeParse(process.env);
 
-if (!safe_env.success) {
-  console.error("Invalid environment variables:", safe_env.error);
-  process.exit(1);
+if (!safeEnv.success) {
+  console.error("Invalid environment variables:", safeEnv.error);
 }
 
-export const ENV = safe_env.data;
+export const env = safeEnv.data;

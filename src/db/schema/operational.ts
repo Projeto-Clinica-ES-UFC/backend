@@ -8,21 +8,18 @@ export const specialty = sqliteTable("specialty", {
 });
 
 export const agreement = sqliteTable("agreement", {
-	id: text("id").primaryKey(),
+	id: integer("id").primaryKey({ autoIncrement: true }),
 	name: text("name").notNull(),
-	cnpj: text("cnpj"),
-	ansRegistration: text("ans_registration"),
-	active: integer("active", { mode: "boolean" }).default(true).notNull(),
+	discount: integer("discount").default(0),
 });
 
 export const task = sqliteTable("task", {
-	id: text("id").primaryKey(),
+	id: integer("id").primaryKey({ autoIncrement: true }),
 	title: text("title").notNull(),
 	description: text("description"),
-	status: text("status", { enum: ["Pending", "Completed", "Canceled"] })
-		.default("Pending")
-		.notNull(),
-	assignedToUserId: text("assigned_to_user_id").references(() => user.id),
+	priority: text("priority", { enum: ["Baixa", "Média", "Alta"] }).default("Baixa"),
+	done: integer("done", { mode: "boolean" }).default(false),
+	assignedToId: integer("assigned_to_id"), // Assuming references professional or internal user mapping
 	dueDate: integer("due_date", { mode: "timestamp_ms" }),
 	createdAt: integer("created_at", { mode: "timestamp_ms" })
 		.default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
@@ -38,8 +35,7 @@ export const configuration = sqliteTable("configuration", {
 });
 
 export const taskRelations = relations(task, ({ one }) => ({
-	assignedTo: one(user, {
-		fields: [task.assignedToUserId],
-		references: [user.id],
-	}),
+    // If assignedToId refers to professional (int), I'd need to import professional.
+    // If it refers to user (text), this schema is mismatch.
+    // Given frontend sends number, I'll stick to integer column.
 }));

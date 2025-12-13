@@ -14,11 +14,10 @@ taskRoutes.get("/", describeRoute({
 	const page = Number(c.req.query("page") || 1);
 	const limit = Number(c.req.query("limit") || 20);
 	const q = c.req.query("q");
-	const status = c.req.query("status");
-	const assignedToUserId = c.req.query("assignedToUserId");
+	const assignedToId = c.req.query("assignedToId") ? Number(c.req.query("assignedToId")) : undefined;
 	const dueDateUpTo = c.req.query("dueDateUpTo");
 
-	const result = await taskService.getAll({ page, limit, q, status, assignedToUserId, dueDateUpTo });
+	const result = await taskService.getAll({ page, limit, q, assignedToId, dueDateUpTo });
 	return c.json(result);
 });
 
@@ -34,7 +33,7 @@ taskRoutes.post("/", describeRoute({
 taskRoutes.patch("/:id", describeRoute({
 	description: "Update a task",
 }), async (c) => {
-	const id = c.req.param("id");
+	const id = Number(c.req.param("id"));
 	const body = await c.req.json();
 	const validated = updateTaskSchema.parse(body);
 	const result = await taskService.update(id, validated);
@@ -44,7 +43,7 @@ taskRoutes.patch("/:id", describeRoute({
 taskRoutes.delete("/:id", describeRoute({
 	description: "Delete a task",
 }), async (c) => {
-	const id = c.req.param("id");
+	const id = Number(c.req.param("id"));
 	await taskService.delete(id);
 	return c.body(null, 204);
 });
