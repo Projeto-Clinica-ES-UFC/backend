@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { professional, user } from "@/db/schema";
+import { professional } from "@/db/schema";
 import type { IProfessionalRepository, Professional } from "./professional.repository";
 import type { UpdateProfessionalDTO } from "./professional.dto";
 import type { PaginatedResult, PaginationParams } from "@/shared/types";
@@ -35,39 +35,32 @@ export class DrizzleProfessionalRepository implements IProfessionalRepository {
 		return result || null;
 	}
 
-	async findByUserId(userId: string): Promise<Professional | null> {
-		const [result] = await db.select().from(professional).where(eq(professional.userId, userId));
-		return result || null;
-	}
-
 	async create(data: { name: string; email: string; specialty?: string }): Promise<Professional> {
-		return db.transaction(async (tx) => {
-			const userId = crypto.randomUUID();
-			// 1. Create User
-			await tx.insert(user).values({
-				id: userId,
+		// Check if professional with this email already exists
+		const [existingProfessional] = await db
+			.select()
+			.from(professional)
+			.where(eq(professional.email, data.email));
+
+		if (existingProfessional) {
+			throw new Error("Um profissional com este email já existe");
+		}
+
+		// Create Professional (no user account needed)
+		const [newProfessional] = await db
+			.insert(professional)
+			.values({
 				name: data.name,
 				email: data.email,
-				emailVerified: false,
-			});
+				specialty: data.specialty,
+			})
+			.returning();
 
-			// 2. Create Professional linked to User
-			const [newProfessional] = await tx
-				.insert(professional)
-				.values({
-					userId: userId,
-					name: data.name,
-					email: data.email,
-					specialty: data.specialty,
-				})
-				.returning();
+		if (!newProfessional) {
+			throw new Error("Failed to create professional");
+		}
 
-			if (!newProfessional) {
-				throw new Error("Failed to create professional");
-			}
-
-			return newProfessional;
-		});
+		return newProfessional;
 	}
 
 	async update(id: number, data: UpdateProfessionalDTO): Promise<Professional | null> {

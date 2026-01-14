@@ -4,10 +4,10 @@ import { user } from "./auth";
 
 export const professional = sqliteTable("professional", {
 	id: integer("id").primaryKey({ autoIncrement: true }),
-	userId: text("user_id").notNull().references(() => user.id).unique(),
+	userId: text("user_id").references(() => user.id), // Optional - only set if professional has login account
 	name: text("name").notNull(),
-    email: text("email"),
-    specialty: text("specialty"),
+	email: text("email"),
+	specialty: text("specialty"),
 	createdAt: integer("created_at", { mode: "timestamp_ms" })
 		.default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
 		.notNull(),
