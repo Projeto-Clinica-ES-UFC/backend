@@ -1,15 +1,15 @@
-import {Hono} from "hono";
-import {cors} from "hono/cors";
-import {csrf} from "hono/csrf";
-import {logger} from "hono/logger";
+import { Hono } from "hono";
+import { cors } from "hono/cors";
+import { csrf } from "hono/csrf";
+import { logger } from "hono/logger";
 
-import {prettyJSON} from "hono/pretty-json";
+import { prettyJSON } from "hono/pretty-json";
 
-import {http_routes} from "@/http/routes";
-import {type Variables} from "@/http/types";
+import { feature_routes } from "@/features";
+import { type Variables } from "@/shared/types";
 
-import {env} from "./env";
-import {auth} from "@/better-auth";
+import { env } from "./env";
+import { auth } from "@/better-auth";
 
 const app = new Hono<{ Variables: Variables }>({
   strict: false,
@@ -53,7 +53,7 @@ app.use(
  * Read more about the CSRF Protection Middleware here:
  * https://hono.dev/docs/middleware/builtin/csrf
  */
-app.use(csrf({origin: "*"}));
+app.use(csrf({ origin: "*" }));
 
 /**
  * This middleware compresses the response body, according to `Accept-Encoding` request header.
@@ -65,7 +65,7 @@ app.use(csrf({origin: "*"}));
 
 app.all("/api/auth/*", (c) => auth.handler(c.req.raw));
 
-app.route("/", http_routes);
+app.route("/", feature_routes);
 
 export default {
   port: env?.API_PORT,
