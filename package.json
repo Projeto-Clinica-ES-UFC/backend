@@ -3,9 +3,10 @@
   "type": "module",
   "scripts": {
     "dev": "bun run --hot src/index.ts",
+    "test": "bun test",
     "build": "tsdown",
     "compile": "bun build --compile --minify --sourcemap --bytecode ./src/index.ts --outfile server",
-    "start": "bun run dist/index.js",
+    "start": "bun run dist/index.mjs",
     "check-types": "tsc --noEmit",
     "lint": "bun run lint:ox && bun run lint:es",
     "lint:ox": "oxlint",
