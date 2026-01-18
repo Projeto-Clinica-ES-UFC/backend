@@ -6,10 +6,13 @@ This project was created with [Better-T-Stack](https://github.com/AmanVarshney01
 
 - **TypeScript** - For type safety and improved developer experience
 - **Hono** - Lightweight, performant server framework
+- **Hono OpenAPI** - For API documentation
 - **Bun** - Runtime environment
 - **Drizzle** - TypeScript-first ORM
-- **SQLite/Turso** - Database engine
+- **SQLite/Turso** - Database engine (using LibSQL client)
 - **Authentication** - Better-Auth
+- **Validation** - Zod
+- **Linting** - Oxlint + ESLint
 - **Husky** - Git hooks for code quality
 
 ## Getting Started

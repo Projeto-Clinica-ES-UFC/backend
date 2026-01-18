@@ -132,3 +132,4 @@ dist
 .pnp.*
 
 local.db
+test.db

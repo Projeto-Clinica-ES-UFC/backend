@@ -1,6 +1,6 @@
 import type { appointment } from "@/db/schema";
-import type { CreateAppointmentDTO, UpdateAppointmentDTO } from "@/http/dto/appointment.dto";
-import type { PaginatedResult, PaginationParams } from "@/http/types";
+import type { CreateAppointmentDTO, UpdateAppointmentDTO } from "@/features/appointment/appointment.dto";
+import type { PaginatedResult, PaginationParams } from "@/shared/types";
 
 export type Appointment = typeof appointment.$inferSelect;
 
@@ -10,6 +10,7 @@ export type AppointmentFilterParams = PaginationParams & {
 	startDate?: string; // ISO
 	endDate?: string; // ISO
 	status?: string[];
+	sort?: "asc" | "desc";
 };
 
 export interface IAppointmentRepository {

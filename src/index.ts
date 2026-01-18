@@ -39,7 +39,7 @@ app.use(logger());
  */
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:3000"],
+    origin: (origin) => origin, // Allow any origin (including ngrok)
     credentials: true,
     maxAge: 60 * 60 * 24 * 7, // 7 days
     allowHeaders: ["Content-Type", "Authorization"],

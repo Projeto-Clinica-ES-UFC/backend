@@ -3,11 +3,11 @@ import { appointment } from "@/db/schema";
 import type { IAppointmentRepository, Appointment, AppointmentFilterParams } from "./appointment.repository";
 import type { CreateAppointmentDTO, UpdateAppointmentDTO } from "./appointment.dto";
 import type { PaginatedResult } from "@/shared/types";
-import { eq, count, desc, and, gte, lte, lt, gt, ne, inArray } from "drizzle-orm";
+import { eq, count, desc, asc, and, gte, lte, lt, gt, ne, inArray } from "drizzle-orm";
 
 export class DrizzleAppointmentRepository implements IAppointmentRepository {
 	async findAll(params: AppointmentFilterParams): Promise<PaginatedResult<Appointment>> {
-		const { page, limit, professionalId, patientId, startDate, endDate, status } = params;
+		const { page, limit, professionalId, patientId, startDate, endDate, status, sort } = params;
 		const offset = (page - 1) * limit;
 
 		const conditions = [];
@@ -36,7 +36,7 @@ export class DrizzleAppointmentRepository implements IAppointmentRepository {
 			.where(whereClause)
 			.limit(limit)
 			.offset(offset)
-			.orderBy(desc(appointment.start));
+			.orderBy(sort === "asc" ? asc(appointment.start) : desc(appointment.start));
 
 		return {
 			data,

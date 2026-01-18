@@ -1,6 +1,6 @@
 import type { medicalRecord } from "@/db/schema";
-import type { CreateMedicalRecordDTO, UpdateMedicalRecordDTO } from "@/http/dto/medical-record.dto";
-import type { PaginatedResult, PaginationParams } from "@/http/types";
+import type { CreateMedicalRecordDTO, UpdateMedicalRecordDTO } from "@/features/patient/medical-record/medical-record.dto";
+import type { PaginatedResult, PaginationParams } from "@/shared/types";
 
 export type MedicalRecord = typeof medicalRecord.$inferSelect;
 

@@ -1,6 +1,6 @@
-import {createMiddleware} from "hono/factory";
-import type {Variables} from "@/http/types";
-import {auth} from "@/better-auth";
+import { createMiddleware } from "hono/factory";
+import type { Variables } from "@/shared/types";
+import { auth } from "@/better-auth";
 
 type Env = {
   Variables: Variables;
@@ -12,7 +12,7 @@ export const authMiddleware = createMiddleware<Env>(async (c, next) => {
   });
 
   if (!session) {
-    return c.json({error: "Unauthorized"}, 401);
+    return c.json({ error: "Unauthorized" }, 401);
   }
 
   c.set("user", session.user);

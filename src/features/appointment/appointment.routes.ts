@@ -20,6 +20,7 @@ appointmentRoutes.get("/", describeRoute({
 	const startDate = c.req.query("startDate");
 	const endDate = c.req.query("endDate");
 	const status = c.req.queries("status"); // queries returns array for ?status=A&status=B
+	const sort = c.req.query("sort") as "asc" | "desc" | undefined;
 
 	const result = await appointmentService.getAll({
 		page,
@@ -29,7 +30,8 @@ appointmentRoutes.get("/", describeRoute({
 		patientId,
 		startDate,
 		endDate,
-		status
+		status,
+		sort
 	});
 	return c.json(result);
 });

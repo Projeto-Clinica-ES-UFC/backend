@@ -1,6 +1,6 @@
 import type { patient } from "@/db/schema";
-import type { CreatePatientDTO, UpdatePatientDTO } from "@/http/dto/patient.dto";
-import type { PaginatedResult, PaginationParams } from "@/http/types";
+import type { CreatePatientDTO, UpdatePatientDTO } from "@/features/patient/patient.dto";
+import type { PaginatedResult, PaginationParams } from "@/shared/types";
 
 export type Patient = typeof patient.$inferSelect;
 
