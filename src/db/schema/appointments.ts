@@ -12,7 +12,6 @@ export const appointment = sqliteTable("appointment", {
 	status: text("status", { enum: ["Pendente", "Confirmado", "Realizado", "Cancelado"] })
 		.default("Pendente")
 		.notNull(),
-	unimedPending: integer("unimed_pending", { mode: "boolean" }).default(false),
 	createdAt: integer("created_at", { mode: "timestamp_ms" })
 		.default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
 		.notNull(),

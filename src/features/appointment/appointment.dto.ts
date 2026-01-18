@@ -6,14 +6,12 @@ export const createAppointmentSchema = z.object({
 	start: z.string().datetime(),
 	end: z.string().datetime(),
 	status: z.enum(["Pendente", "Confirmado", "Realizado", "Cancelado"]).optional(),
-	pendenciaUnimed: z.boolean().optional(), // Maps to unimedPending in DB
 });
 
 export const updateAppointmentSchema = z.object({
 	start: z.string().datetime().optional(),
 	end: z.string().datetime().optional(),
 	status: z.enum(["Pendente", "Confirmado", "Realizado", "Cancelado"]).optional(),
-	pendenciaUnimed: z.boolean().optional(), // Maps to unimedPending in DB
 });
 
 export type CreateAppointmentDTO = z.infer<typeof createAppointmentSchema>;

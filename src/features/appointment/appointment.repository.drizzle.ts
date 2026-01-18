@@ -50,14 +50,12 @@ export class DrizzleAppointmentRepository implements IAppointmentRepository {
 	}
 
 	async create(data: CreateAppointmentDTO): Promise<Appointment> {
-		const { pendenciaUnimed, ...rest } = data;
 		const [result] = await db
 			.insert(appointment)
 			.values({
-				...rest,
+				...data,
 				start: new Date(data.start),
 				end: new Date(data.end),
-				unimedPending: pendenciaUnimed,
 			})
 			.returning();
 
@@ -66,11 +64,10 @@ export class DrizzleAppointmentRepository implements IAppointmentRepository {
 	}
 
 	async update(id: number, data: UpdateAppointmentDTO): Promise<Appointment | null> {
-		const { start, end, pendenciaUnimed, ...rest } = data;
+		const { start, end, ...rest } = data;
 		const updateData: Partial<typeof appointment.$inferInsert> = { ...rest };
 		if (start) updateData.start = new Date(start);
 		if (end) updateData.end = new Date(end);
-		if (pendenciaUnimed !== undefined) updateData.unimedPending = pendenciaUnimed;
 
 		const [result] = await db
 			.update(appointment)
