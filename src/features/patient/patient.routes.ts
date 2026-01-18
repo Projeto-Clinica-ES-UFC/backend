@@ -4,9 +4,7 @@ import { patientService } from "./patient.service";
 import { createPatientSchema, updatePatientSchema } from "./patient.dto";
 import { authMiddleware } from "@/shared/middlewares/auth-middleware";
 import { medicalRecordService } from "./medical-record/medical-record.service";
-import { anamnesisService } from "./anamnesis/anamnesis.service";
 import { createMedicalRecordSchema, updateMedicalRecordSchema } from "./medical-record/medical-record.dto";
-import { upsertAnamnesisSchema } from "./anamnesis/anamnesis.dto";
 import type { Variables } from "@/shared/types";
 
 const patientRoutes = new Hono<{ Variables: Variables }>();
@@ -97,33 +95,6 @@ patientRoutes.delete("/:id/medical-record/:eventId", describeRoute({
 	const eventId = Number(c.req.param("eventId"));
 	await medicalRecordService.delete(eventId);
 	return c.body(null, 204);
-});
-
-// Anamnesis Routes
-patientRoutes.get("/:id/anamnesis", describeRoute({
-	description: "Get latest anamnesis for a patient",
-}), async (c) => {
-	const id = Number(c.req.param("id"));
-	const result = await anamnesisService.getLatest(id);
-	return c.json(result);
-});
-
-patientRoutes.put("/:id/anamnesis", describeRoute({
-	description: "Upsert anamnesis for a patient",
-}), async (c) => {
-	const id = Number(c.req.param("id"));
-	const body = await c.req.json();
-	const validated = upsertAnamnesisSchema.parse(body);
-	const result = await anamnesisService.create(id, validated);
-	return c.json(result);
-});
-
-patientRoutes.get("/:id/anamnesis/history", describeRoute({
-	description: "Get anamnesis history for a patient",
-}), async (c) => {
-	const id = Number(c.req.param("id"));
-	const result = await anamnesisService.getHistory(id);
-	return c.json(result);
 });
 
 export default patientRoutes;
